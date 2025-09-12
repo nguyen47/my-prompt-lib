@@ -104,6 +104,31 @@ Once deployed, the application will be available at:
 - ✅ Log rotation for production
 - ✅ Development override for hot reload
 
+#### Troubleshooting Docker Build Issues
+
+If you encounter build errors with `better-sqlite3`, try the alternative Dockerfile:
+
+```bash
+# Use Ubuntu-based Dockerfile for better compatibility
+USE_ALTERNATIVE_DOCKERFILE=true ./scripts/deploy.sh
+```
+
+Or manually:
+```bash
+# Set environment variable and build
+export DOCKERFILE=Dockerfile.alternative
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+```
+
+**Common Issues:**
+- **Node.js version errors**: Fixed by using Node.js 20+ (already configured)
+- **Python/build tools missing**: Fixed in alternative Dockerfile with Ubuntu base
+- **SQLite compilation errors**: Use `Dockerfile.alternative` for better compatibility
+
+**Dockerfile Options:**
+- `Dockerfile` (default): Alpine-based, smaller image size
+- `Dockerfile.alternative`: Ubuntu-based, better compatibility with native modules
+
 ## Security Notes
 
 - Use a strong password for production

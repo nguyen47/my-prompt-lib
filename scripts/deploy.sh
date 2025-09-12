@@ -1,6 +1,11 @@
 #!/bin/bash
 
 # Production deployment script for Prompt Library
+# 
+# Usage:
+#   ./scripts/deploy.sh                    # Use default Alpine-based Dockerfile
+#   USE_ALTERNATIVE_DOCKERFILE=true ./scripts/deploy.sh   # Use Ubuntu-based Dockerfile
+#
 
 echo "🚀 Starting Prompt Library production deployment..."
 
@@ -44,6 +49,16 @@ docker-compose -f docker-compose.yml -f docker-compose.prod.yml down
 
 # Build and start the application
 echo "🔨 Building and starting the application..."
+
+# Check if we should use the alternative Dockerfile
+if [ "$USE_ALTERNATIVE_DOCKERFILE" = "true" ]; then
+    echo "📦 Using alternative Dockerfile (Ubuntu-based) for better compatibility..."
+    export DOCKERFILE=Dockerfile.alternative
+else
+    echo "📦 Using default Dockerfile (Alpine-based)..."
+    export DOCKERFILE=Dockerfile
+fi
+
 docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
 
 # Wait for the application to be ready
