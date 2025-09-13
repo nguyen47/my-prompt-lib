@@ -13,9 +13,22 @@ RUN apk add --no-cache \
     sqlite-dev
 WORKDIR /app
 
-# Install dependencies based on the preferred package manager
+# Install all dependencies (including dev dependencies needed for build)
 COPY package.json package-lock.json* ./
-RUN npm ci --omit=dev
+RUN npm ci
+
+# Install production dependencies only
+FROM base AS prod-deps
+RUN apk add --no-cache \
+    libc6-compat \
+    python3 \
+    make \
+    g++ \
+    sqlite \
+    sqlite-dev
+WORKDIR /app
+COPY package.json package-lock.json* ./
+RUN npm ci --omit=dev && npm cache clean --force
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -55,6 +68,9 @@ COPY --from=builder /app/public ./public
 
 # Create data directory and set permissions
 RUN mkdir -p data && chown nextjs:nodejs data
+
+# Copy production node_modules
+COPY --from=prod-deps --chown=nextjs:nodejs /app/node_modules ./node_modules
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
