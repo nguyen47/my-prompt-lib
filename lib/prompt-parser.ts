@@ -36,7 +36,7 @@ export function parseVariables(content: string): ParsedVariable[] {
 
     if (parts.length >= 3) {
       const optionsOrPlaceholder = parts[2].trim();
-      if (optionsOrPlaceholder && (type === 'select' || type === 'radio')) {
+      if (optionsOrPlaceholder && (type === 'select' || type === 'radio' || type === 'checkbox')) {
         options = optionsOrPlaceholder.split('|').map(opt => opt.trim());
       } else if (optionsOrPlaceholder) {
         placeholder = optionsOrPlaceholder;

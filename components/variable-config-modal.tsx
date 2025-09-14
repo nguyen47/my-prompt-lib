@@ -32,7 +32,13 @@ export function VariableConfigModal({ isOpen, onClose, prompt }: VariableConfigM
             initialValues[variable.name] = variable.defaultValue;
           }
         } else {
-          initialValues[variable.name] = variable.type === 'number' ? 0 : '';
+          if (variable.type === 'number') {
+            initialValues[variable.name] = 0;
+          } else if (variable.type === 'checkbox') {
+            initialValues[variable.name] = '';
+          } else {
+            initialValues[variable.name] = '';
+          }
         }
       });
       setValues(initialValues);
@@ -77,7 +83,13 @@ export function VariableConfigModal({ isOpen, onClose, prompt }: VariableConfigM
             resetValues[variable.name] = variable.defaultValue;
           }
         } else {
-          resetValues[variable.name] = variable.type === 'number' ? 0 : '';
+          if (variable.type === 'number') {
+            resetValues[variable.name] = 0;
+          } else if (variable.type === 'checkbox') {
+            resetValues[variable.name] = '';
+          } else {
+            resetValues[variable.name] = '';
+          }
         }
       });
       setValues(resetValues);
